@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: shomami <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/10 15:56:20 by shomami           #+#    #+#             */
-/*   Updated: 2018/04/16 20:59:51 by shomami          ###   ########.fr       */
+/*   Created: 2018/04/16 16:28:28 by shomami           #+#    #+#             */
+/*   Updated: 2018/04/17 13:58:34 by shomami          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-
-//#include "libft.h"
-#include <unistd.h>
+#include "get_next_line.h"
 #include <fcntl.h>
-#include <stdlib.h>
+#include <stdio.h>
 
+int	main(int argc, char **argv)
+{
+	int		fd;
+	char *line;
 
-# define BUFF_SIZE 32
+	if (argc > 1)
+	{
+		fd = open(argv[1], O_RDONLY);
+	   	get_next_line(fd, &line);
+		printf("%s", line);
+	   	get_next_line(fd, &line);
+		printf("%s", line);
+		close(fd);
+	}
+	//sleep(1000);
+	return (0);
+}
 
-int get_next_line(const int fd, char **line);
-char	*ft_strjoin(char const *s1, char const *s2);
-void	ft_putchar(char c);
-char	*ft_strnew(size_t size);
-char    *ft_strsub(char const *s, unsigned int start, size_t len);
-size_t      ft_strlen(const char *str);
-#endif
