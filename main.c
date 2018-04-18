@@ -6,7 +6,7 @@
 /*   By: shomami <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 16:28:28 by shomami           #+#    #+#             */
-/*   Updated: 2018/04/17 13:58:34 by shomami          ###   ########.fr       */
+/*   Updated: 2018/04/18 15:34:40 by shomami          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,24 @@ int	main(int argc, char **argv)
 {
 	int		fd;
 	char *line;
+	int store;
 
 	if (argc > 1)
 	{
 		fd = open(argv[1], O_RDONLY);
-	   	get_next_line(fd, &line);
-		printf("%s", line);
-	   	get_next_line(fd, &line);
-		printf("%s", line);
+	   	store = get_next_line(fd, &line);
+		printf("%s\n", line);
+		printf("%d\n", store);
+		free(line);
+		store = get_next_line(fd, &line);
+		printf("%s\n", line);
+		printf("%d\n", store);
+		store = get_next_line(fd, &line);
+		printf("%s\n", line);
+		printf("%d\n", store);
 		close(fd);
 	}
-	//sleep(1000);
+	while(1);
 	return (0);
 }
 

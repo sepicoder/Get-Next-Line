@@ -6,72 +6,103 @@
 /*   By: shomami <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/10 15:57:15 by shomami           #+#    #+#             */
-/*   Updated: 2018/04/17 16:02:19 by shomami          ###   ########.fr       */
+/*   Updated: 2018/04/18 15:50:57 by shomami          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int error_check(int fd, char **line, char *str)
+static int		error_check(char **line)
 {
-	if (fd < 0 || line == NULL)
-		return (-1);
-	if (!(str = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+	if (!line)
 		return (-1);
 	return (0);
 }
 
-char *read_file(int fd)
+static char	*read_file(int fd)
 {
-	char *tmp;
-	char buf[BUFF_SIZE + 1];
-	int					number_of_bytes_read;
-	
+	char	*tmp;
+	char	buf[BUFF_SIZE + 1];
+	int		number_of_bytes_read;
+	char	*freeer;
+
 	tmp = ft_strnew(1);
 	while ((number_of_bytes_read = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[number_of_bytes_read] = '\0';
+		freeer = tmp;
 		tmp = ft_strjoin(tmp, buf);
+		free(freeer);
 	}
+	if (number_of_bytes_read < 0)
+		return (0);
 	return (tmp);
 }
 
-char *new_line_out(char *str)
+static char	*new_line_out(char *str)
 {
 	int i;
 
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\n')
+		if (str[i] == '\n' || str[i] == '\0')
 		{
-			return(ft_strsub(str, i + 1, (ft_strlen(str) - (i + 1))));
+			return (ft_strsub(str, i + 1, (ft_strlen(str) - (i + 1))));
 		}
 		i++;
 	}
-	return (0);
+	return (str);
 }
 
-
-int get_next_line(const int fd, char **line)
+static void	if_new_line(int fd, char **line, char **str)
 {
-	int i;
-	static char *str;
+	int			i;
+	int			is_new_line;
+	char		*save;
 
-	i = 0;
-	while (!str)
+	i = -1;
+	is_new_line = 0;
+	while (str[fd][++i])
 	{
-		str = read_file(fd);
-	}
-	while (str[i])
-	{
-		if (str[i] == '\n')
+		if (str[fd][i] == '\n')
 		{
-			*line = ft_strsub(str, 0, i);
-			str = new_line_out(str);
-			break;
+			*line = ft_strsub(str[fd], 0, i);
+			is_new_line = 1;
+			save = str[fd];
+			str[fd] = new_line_out(str[fd]);
+			if (save)
+				free(save);
+			break ;
 		}
-	i++;
 	}
-	return (*line ? 1 : 0);
+	if (is_new_line == 0)
+	{
+		*line = ft_strsub(str[fd], 0, ft_strlen(str[fd]));
+		free(str[fd]);
+		str[fd] = NULL;
+	}
+}
+
+int		get_next_line(const int fd, char **line)
+{
+	static char	*str[5000];
+
+	if (fd < 0 || error_check(line) == -1)
+		return (-1);
+	while (!str[fd])
+	{
+		if ((str[fd] = read_file(fd)) == 0)
+			return (-1);
+	}
+	if (!str[fd] || str[fd][0] == '\0')
+	{
+		free(*line);
+		*line = NULL;
+		free(str[fd]);
+		str[fd] = NULL;
+		return (0);
+	}
+	if_new_line(fd, line, str);
+	return (1);
 }
