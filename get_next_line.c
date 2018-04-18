@@ -6,13 +6,13 @@
 /*   By: shomami <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/10 15:57:15 by shomami           #+#    #+#             */
-/*   Updated: 2018/04/18 15:50:57 by shomami          ###   ########.fr       */
+/*   Updated: 2018/04/18 16:24:12 by shomami          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int		error_check(char **line)
+static int	error_check(char **line)
 {
 	if (!line)
 		return (-1);
@@ -84,7 +84,7 @@ static void	if_new_line(int fd, char **line, char **str)
 	}
 }
 
-int		get_next_line(const int fd, char **line)
+int			get_next_line(const int fd, char **line)
 {
 	static char	*str[5000];
 
