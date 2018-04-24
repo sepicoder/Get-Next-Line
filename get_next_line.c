@@ -6,7 +6,7 @@
 /*   By: shomami <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/10 15:57:15 by shomami           #+#    #+#             */
-/*   Updated: 2018/04/18 16:24:12 by shomami          ###   ########.fr       */
+/*   Updated: 2018/04/23 20:07:04 by shomami          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int			get_next_line(const int fd, char **line)
 {
 	static char	*str[5000];
 
-	if (fd < 0 || error_check(line) == -1)
+	if (fd < 0 || fd > 5000 || error_check(line) == -1)
 		return (-1);
 	while (!str[fd])
 	{
@@ -97,7 +97,6 @@ int			get_next_line(const int fd, char **line)
 	}
 	if (!str[fd] || str[fd][0] == '\0')
 	{
-		free(*line);
 		*line = NULL;
 		free(str[fd]);
 		str[fd] = NULL;
